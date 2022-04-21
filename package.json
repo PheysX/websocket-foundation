@@ -1,0 +1,29 @@
+{
+    "name": "websocket-foundation",
+    "type": "module",
+    "version": "0.0.1",
+    "description": "",
+    "license": "MIT",
+    "author": {
+        "name": "Ioannis Pourliotis",
+        "email": "dev@pourliotis.de"
+    },
+    "main": "./src/SocketAccess.js",
+    "dependencies": {
+        "@socket.io/admin-ui": "^0.2.0",
+        "ajv": "^8.11.0",
+        "ajv-bsontype": "^1.0.7",
+        "ajv-errors": "^3.0.0",
+        "ajv-formats": "^2.1.1",
+        "ajv-keywords": "^5.1.0",
+        "eiows": "^4.0.1",
+        "lodash": "^4.17.21",
+        "mongodb": "^4.4.1",
+        "npmlog": "^6.0.1",
+        "socket.io": "^4.4.1"
+    },
+    "optionalDependencies": {
+        "bufferutil": "^4.0.6",
+        "utf-8-validate": "^5.0.9"
+    }
+}
