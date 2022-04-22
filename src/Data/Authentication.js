@@ -1,5 +1,5 @@
-import Criteria from './Criteria.js';
-import crypto from 'crypto';
+import Criteria from './Criteria.js'
+import crypto from 'crypto'
 import log from 'npmlog'
 
 class Authentication {
@@ -171,9 +171,9 @@ class Authentication {
             const salt = crypto.randomBytes(8).toString('hex')
 
             crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-                if (err) reject(err);
+                if (err) reject(err)
                 resolve(salt + ':' + derivedKey.toString('hex'))
-            });
+            })
         })
     }
 
@@ -181,9 +181,9 @@ class Authentication {
         return new Promise((resolve, reject) => {
             const [salt, key] = hash.split(':')
             crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-                if (err) reject(err);
+                if (err) reject(err)
                 resolve(key === derivedKey.toString('hex'))
-            });
+            })
         })
     }
 }

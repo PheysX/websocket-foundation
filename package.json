@@ -1,14 +1,18 @@
 {
     "name": "websocket-foundation",
     "type": "module",
-    "version": "0.0.1",
-    "description": "",
+    "version": "0.0.2",
+    "description": "Socket.io & mongoDB based websocket server foundation",
     "license": "MIT",
     "author": {
         "name": "Ioannis Pourliotis",
         "email": "dev@pourliotis.de"
     },
     "main": "./src/SocketAccess.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/PheysX/websocket-foundation.git"
+    },
     "dependencies": {
         "@socket.io/admin-ui": "^0.2.0",
         "ajv": "^8.11.0",

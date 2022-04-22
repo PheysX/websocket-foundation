@@ -4,9 +4,9 @@ import Criteria from './Data/Criteria.js'
 import Authentication from './Data/Authentication.js'
 import {instrument} from '@socket.io/admin-ui'
 import {createServer} from 'http'
-import merge from 'lodash/merge.js';
+import merge from 'lodash/merge.js'
 
-const httpServer = createServer();
+const httpServer = createServer()
 
 class SocketAccess extends Authentication {
 
@@ -47,7 +47,7 @@ class SocketAccess extends Authentication {
      * @param {SchemaFactory} schemaFactory
      */
     constructor(db, socketParams, socketPort, entities, schemaFactory, operations, debugMode = false) {
-        super(db);
+        super(db)
 
         this._entities = entities
         this._db = db
@@ -57,25 +57,26 @@ class SocketAccess extends Authentication {
         this._debugMode = debugMode
 
         merge(this._operations, operations)
-        merge(this.actions, Object.keys(operations))
 
-        return this.init()
+        Object.keys(operations).forEach(operation => {
+            this.actions.push(operation)
+        })
+
+        this._init()
     }
 
-    async init() {
+    async _init() {
         this.io = new Server(httpServer, this._socketParams)
 
         instrument(this.io, {
             auth: false,
-        });
+        })
 
         this.io.listen(this._socketPort)
         this.listen(this.io, 'connection', (socket) => {
             this.push(socket, 'connected', socket.id)
             this.listen(socket, 'user:login', this.registerLogin.bind(this, socket))
         })
-
-        return this.io
     }
 
     async registerLogin(socket, data) {
@@ -93,7 +94,7 @@ class SocketAccess extends Authentication {
             this.actions.forEach(action => {
                 if (permissions.includes(`${entity}:${action}`)) {
                     Object.keys(this._operations[action]).forEach((operation) => {
-                        this.listen(socket, `${entity}:${operation}`, this._operations[action][operation].bind(this, socket, entity))
+                        this.listen(socket, `${entity}:${action}:${operation}`, this._operations[action][operation].bind(this, socket, entity, this))
                     })
                 }
             })
@@ -107,6 +108,7 @@ class SocketAccess extends Authentication {
     /**
      * @param {object} socket
      * @param {string} entity
+     * @param {SocketAccess} SocketAccess
      * @param {string} data
      */
     async joinRoom(socket, entity, data) {
@@ -131,9 +133,11 @@ class SocketAccess extends Authentication {
     /**
      * @param {object} socket
      * @param {string} entity
-     * @param {string} identifier
+     * @param {SocketAccess} SocketAccess
+     * @param {string} data
      */
-    async leaveRoom(socket, entity, identifier) {
+    async leaveRoom(socket, entity, SocketAccess, data) {
+        const identifier = data
         if (!await this.entityExists(entity, identifier)) {
             return
         }
@@ -145,10 +149,11 @@ class SocketAccess extends Authentication {
     /**
      * @param {object} socket
      * @param {string} entity
+     * @param {SocketAccess} SocketAccess
      * @param {object} data
      * @returns {Promise<void>}
      */
-    async searchEntity(socket, entity, data) {
+    async searchEntity(socket, entity, SocketAccess, data) {
         try {
             const criteria = new Criteria(data.ids, data.sort, data.limit, data.offset)
             criteria.filter = data.filter
@@ -163,10 +168,11 @@ class SocketAccess extends Authentication {
     /**
      * @param {object} socket
      * @param {string} entity
-     * @param {Object} data
+     * @param {SocketAccess} SocketAccess
+     * @param {object} data
      * @returns {Promise<void>}
      */
-    async createEntity(socket, entity, data) {
+    async createEntity(socket, entity, SocketAccess, data) {
         try {
             await this.validate(entity, 'create', data)
 
@@ -180,10 +186,11 @@ class SocketAccess extends Authentication {
     /**
      * @param {object} socket
      * @param {string} entity
-     * @param {Object} data
+     * @param {SocketAccess} SocketAccess
+     * @param {object} data
      * @returns {Promise<void>}
      */
-    async replaceEntity(socket, entity, data) {
+    async replaceEntity(socket, entity, SocketAccess, data) {
         try {
             await this.validate(entity, 'replace', data)
             await this._db.replace(entity, data._id, data)
@@ -198,10 +205,11 @@ class SocketAccess extends Authentication {
     /**
      * @param {object} socket
      * @param {string} entity
-     * @param {Object} data
+     * @param {SocketAccess} SocketAccess
+     * @param {object} data
      * @returns {Promise<void>}
      */
-    async updateEntity(socket, entity, data) {
+    async updateEntity(socket, entity, SocketAccess, data) {
         try {
             await this.validate(entity, 'update', data)
             await this._db.update(entity, data._id, data)
@@ -216,10 +224,11 @@ class SocketAccess extends Authentication {
     /**
      * @param {object} socket
      * @param {string} entity
+     * @param {SocketAccess} SocketAccess
      * @param {string[]} data
      * @returns {Promise<void>}
      */
-    async deleteEntity(socket, entity, data) {
+    async deleteEntity(socket, entity, SocketAccess, data) {
         const ids = data
         try {
             const criteria = new Criteria(ids)

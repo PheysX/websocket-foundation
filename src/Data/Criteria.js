@@ -44,7 +44,7 @@ class Criteria {
     }
 
     get ids() {
-        return this._ids;
+        return this._ids
     }
 
     set ids(value) {
@@ -52,15 +52,15 @@ class Criteria {
     }
 
     get sort() {
-        return this._sort;
+        return this._sort
     }
 
     set sort(value) {
-        this._sort = value;
+        this._sort = value
     }
 
     get limit() {
-        return this._limit;
+        return this._limit
     }
 
     set limit(value) {
@@ -68,26 +68,26 @@ class Criteria {
             value = 0
         }
 
-        this._limit = value;
+        this._limit = value
     }
 
     get offset() {
-        return this._offset;
+        return this._offset
     }
 
     set offset(value) {
         if (value < 0) {
             value = 0
         }
-        this._offset = value;
+        this._offset = value
     }
 
     get filter() {
-        return this._filter;
+        return this._filter
     }
 
     set filter(value) {
-        this._filter = value;
+        this._filter = value
     }
 
     addFilter(value) {

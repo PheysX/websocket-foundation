@@ -1,4 +1,4 @@
-import Ajv from 'ajv';
+import Ajv from 'ajv'
 import definitions from 'ajv-keywords/dist/definitions/index.js'
 import addFormats from 'ajv-formats'
 

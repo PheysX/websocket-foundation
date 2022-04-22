@@ -31,6 +31,6 @@ export default class Schema {
      * @return {{}}
      */
     clone(object) {
-        return JSON.parse(JSON.stringify(object));
+        return JSON.parse(JSON.stringify(object))
     }
 }

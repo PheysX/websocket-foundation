@@ -24,7 +24,7 @@ export default class AclRoleSchema extends Schema {
 
         },
         additionalProperties: false,
-    };
+    }
 
     create() {
         return this.schema

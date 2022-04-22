@@ -54,7 +54,7 @@ export default class UserSchema extends Schema {
             },
         },
         additionalProperties: false,
-    };
+    }
 
     create() {
         return this.schema

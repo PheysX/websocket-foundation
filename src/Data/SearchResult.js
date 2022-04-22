@@ -16,16 +16,16 @@ class SearchResult {
      * @param {object[]} items
      */
     constructor(items) {
-        this._items = items;
-        this._total = items.length;
+        this._items = items
+        this._total = items.length
     }
 
     get items() {
-        return this._items;
+        return this._items
     }
 
     get total() {
-        return this._total;
+        return this._total
     }
 
     get first() {

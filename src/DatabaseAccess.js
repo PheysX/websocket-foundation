@@ -3,14 +3,10 @@ import SearchResult from './Data/SearchResult.js';
 
 class DatabaseAccess {
     /**
-     * @param {string} clusterName
+     * @param {string} uri
      * @param {string} databaseName
-     * @param {string} username
-     * @param {string} password
      */
-    constructor(clusterName, databaseName, username, password) {
-        const uri = `mongodb+srv://${username}:${password}@${clusterName}.d45oy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-
+    constructor(uri, databaseName) {
         this._client = new MongoClient(uri, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -18,7 +14,7 @@ class DatabaseAccess {
         });
 
         this._client.connect()
-        this._db = this._client.db(`${databaseName}`);
+        this._db = this._client.db(databaseName);
     }
 
     /**
