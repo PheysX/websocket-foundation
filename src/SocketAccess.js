@@ -62,6 +62,7 @@ class SocketAccess extends Authentication {
             this.actions.push(operation)
         })
 
+        this._db.check(this._entities)
         this._init()
     }
 

@@ -1,20 +1,53 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import {MongoClient, ServerApiVersion} from 'mongodb';
 import SearchResult from './Data/SearchResult.js';
 
 class DatabaseAccess {
+
+    /**
+     * @type {string}
+     * @private
+     */
+    _databaseName = null
+
     /**
      * @param {string} uri
      * @param {string} databaseName
      */
     constructor(uri, databaseName) {
+        this._databaseName = databaseName
         this._client = new MongoClient(uri, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverApi: ServerApiVersion.v1,
         });
 
-        this._client.connect()
-        this._db = this._client.db(databaseName);
+        this._connect()
+    }
+
+    async _connect() {
+        await this._client.connect()
+        this._db = this._client.db(this._databaseName);
+    }
+
+    /**
+     * @param {string[]} entities
+     * @returns {Promise<void>}
+     */
+    async check(entities = []) {
+        await this._connect()
+
+        const collections = await this._db.listCollections().toArray()
+
+        const collectionNames = []
+        collections.forEach(collection => {
+            collectionNames.push(collection.name)
+        })
+
+        entities.forEach(entity => {
+            if (!collectionNames.includes(entity)) {
+                this._db.createCollection(entity)
+            }
+        })
     }
 
     /**
