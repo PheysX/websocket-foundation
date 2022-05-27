@@ -26,6 +26,7 @@ export default class UserSchema extends Schema {
             password: {
                 type: 'string',
                 format: 'password',
+                allOf: this.allOf([], 64, 64),
             },
             firstName: {
                 type: 'string',
@@ -46,10 +47,19 @@ export default class UserSchema extends Schema {
             admin: {
                 type: 'boolean',
                 default: false,
+                adminOnly: true,
             },
             userToken: {
-                type: 'string',
+                type: ['string', 'null'],
                 default: null,
+                readOnly: true,
+                anyOf: [
+                    {
+                        type: 'string',
+                    }, {
+                        type: 'null'
+                    }
+                ],
                 allOf: this.allOf(['trim'], 64, 64),
             },
         },

@@ -175,7 +175,7 @@ class SocketAccess extends Authentication {
      */
     async createEntity(socket, entity, SocketAccess, data) {
         try {
-            await this.validate(entity, 'create', data)
+            await this.validate(entity, 'create', data, this.isAdmin(socket))
 
             const id = await this._db.create(entity, data)
             this.push(socket, `${entity}:created`, id)
@@ -193,7 +193,7 @@ class SocketAccess extends Authentication {
      */
     async replaceEntity(socket, entity, SocketAccess, data) {
         try {
-            await this.validate(entity, 'replace', data)
+            await this.validate(entity, 'replace', data, this.isAdmin(socket))
             await this._db.replace(entity, data._id, data)
 
             this.push(socket, `${entity}:replaced`)
@@ -212,7 +212,7 @@ class SocketAccess extends Authentication {
      */
     async updateEntity(socket, entity, SocketAccess, data) {
         try {
-            await this.validate(entity, 'update', data)
+            await this.validate(entity, 'update', data, this.isAdmin(socket))
             await this._db.update(entity, data._id, data)
 
             this.push(socket, `${entity}:updated`)
@@ -267,11 +267,13 @@ class SocketAccess extends Authentication {
     /**
      * @param {string} entity
      * @param {string} action
+     * @param {boolean} isAdmin
      * @param {{}} data
      */
-    async validate(entity, action, data) {
+    async validate(entity, action, data, isAdmin) {
         const validator = this._schemaFactory.get(entity, action)
 
+        this._schemaFactory.reduce(entity, action, data, isAdmin)
         validator(data)
 
         if (validator.errors) {

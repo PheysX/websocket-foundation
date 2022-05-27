@@ -83,7 +83,7 @@ class Authentication {
             }
 
             const user = usersResult.first
-            if (!await this.verify(password, user.password)) {
+            if (!await Authentication.verify(password, user.password)) {
                 return false
             }
 
@@ -164,9 +164,17 @@ class Authentication {
     }
 
     /**
+     * @param {object} socket
+     * @return {boolean}
+     */
+    isAdmin(socket) {
+        return !!socket.data.private.user.admin
+    }
+
+    /**
      * @param {string} password
      */
-    async hash(password) {
+    static async hash(password) {
         return new Promise((resolve, reject) => {
             const salt = crypto.randomBytes(8).toString('hex')
 
@@ -177,7 +185,7 @@ class Authentication {
         })
     }
 
-    async verify(password, hash) {
+    static async verify(password, hash) {
         return new Promise((resolve, reject) => {
             const [salt, key] = hash.split(':')
             crypto.scrypt(password, salt, 64, (err, derivedKey) => {

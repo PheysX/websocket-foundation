@@ -28,19 +28,57 @@ class SchemaFactory {
             const schema = new entities[entity]
 
             this._ajv[entity] = {
-                create: ajv.compile(schema.create()),
-                update: ajv.compile(schema.update()),
-                replace: ajv.compile(schema.replace()),
+                create: {
+                    schema: schema.create(),
+                    compile: ajv.compile(schema.create()),
+                },
+                update: {
+                    schema: schema.update(),
+                    compile: ajv.compile(schema.update()),
+                },
+                replace: {
+                    schema: schema.replace(),
+                    compile: ajv.compile(schema.replace()),
+                },
             }
         })
     }
 
+    /**
+     * @param {string} entity
+     * @param {string} action
+     * @param {{}} data
+     * @param {boolean} isAdmin
+     * @return {{}}
+     */
+    reduce(entity, action, data, isAdmin) {
+        if (!this._ajv[entity]) {
+            return data
+        }
+
+        const schema = this._ajv[entity][action].schema
+        Object.values(schema.properties).forEach((value, index) => {
+            if (!!value.readOnly) {
+                delete data[Object.keys(schema.properties)[index]]
+            }
+            if (!isAdmin && !!value.adminOnly) {
+                delete data[Object.keys(schema.properties)[index]]
+            }
+        })
+
+        return data
+    }
+
+    /**
+     * @param {string} entity
+     * @param {string} action
+     */
     get(entity, action) {
         if (!this._ajv[entity]) {
             return null
         }
 
-        return this._ajv[entity][action]
+        return this._ajv[entity][action].compile
     }
 
     _addFormats(ajv) {
@@ -48,7 +86,9 @@ class SchemaFactory {
     }
 
     _addKeywords(ajv) {
-
+        ajv.addVocabulary([
+            'adminOnly',
+        ])
     }
 }
 
