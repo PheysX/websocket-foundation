@@ -1,7 +1,7 @@
 {
     "name": "websocket-foundation",
     "type": "module",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Socket.io & mongoDB based websocket server foundation",
     "license": "MIT",
     "author": {
@@ -9,6 +9,10 @@
         "email": "dev@pourliotis.de"
     },
     "main": "./src/SocketAccess.js",
+    "scripts": {
+        "test": "jest",
+        "test-watch": "jest --watch"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/PheysX/websocket-foundation.git"
@@ -20,17 +24,21 @@
         "ajv-errors": "^3.0.0",
         "ajv-formats": "^2.1.1",
         "ajv-keywords": "^5.1.0",
-        "eiows": "^4.0.1",
+        "eiows": "^4.1.2",
         "lodash": "^4.17.21",
-        "mongodb": "^4.4.1",
+        "mongodb": "^4.6.0",
         "npmlog": "^6.0.1",
-        "socket.io": "^4.4.1"
+        "socket.io": "^4.5.1"
     },
     "optionalDependencies": {
         "bufferutil": "^4.0.6",
         "utf-8-validate": "^5.0.9"
     },
     "devDependencies": {
-        "eslint": "^8.13.0"
+        "eslint": "^8.16.0",
+        "jest": "^28.1.0",
+        "dotenv": "^16.0.0",
+        "socket.io-client": "^4.5.1",
+        "uuid": "^8.3.2"
     }
 }
