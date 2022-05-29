@@ -226,7 +226,7 @@ class SocketAccess extends Authentication {
      * @param {object} socket
      * @param {string} entity
      * @param {SocketAccess} SocketAccess
-     * @param {string[]} data
+     * @param {{}} data
      * @returns {Promise<void>}
      */
     async deleteEntity(socket, entity, SocketAccess, data) {
