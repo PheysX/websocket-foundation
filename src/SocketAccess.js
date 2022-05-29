@@ -226,12 +226,11 @@ class SocketAccess extends Authentication {
      * @param {object} socket
      * @param {string} entity
      * @param {SocketAccess} SocketAccess
-     * @param {object} data
+     * @param {string[]} data
      * @returns {Promise<void>}
      */
     async deleteEntity(socket, entity, SocketAccess, data) {
-        const ids = data.ids
-
+        const ids = data
         try {
             const criteria = new Criteria(ids)
             const deletedCount = await this._db.delete(entity, criteria.ids)
@@ -273,8 +272,8 @@ class SocketAccess extends Authentication {
      */
     async validate(entity, action, data, isAdmin) {
         const validator = this._schemaFactory.get(entity, action)
+        this._schemaFactory.prepare(entity, action, data, isAdmin)
 
-        this._schemaFactory.reduce(entity, action, data, isAdmin)
         validator(data)
 
         if (validator.errors) {

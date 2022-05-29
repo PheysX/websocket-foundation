@@ -26,7 +26,7 @@ export default class UserSchema extends Schema {
             password: {
                 type: 'string',
                 format: 'password',
-                allOf: this.allOf([], 64, 64),
+                allOf: this.allOf([], 145, 145),
             },
             firstName: {
                 type: 'string',

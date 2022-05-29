@@ -1,6 +1,6 @@
 import Criteria from './Criteria.js'
-import crypto from 'crypto'
 import log from 'npmlog'
+import { verify, randomHex } from './../Util/crypto.util.js'
 
 class Authentication {
 
@@ -83,7 +83,7 @@ class Authentication {
             }
 
             const user = usersResult.first
-            if (!await Authentication.verify(password, user.password)) {
+            if (!await verify(password, user.password)) {
                 return false
             }
 
@@ -147,9 +147,10 @@ class Authentication {
 
     /**
      * @param {string} userId
+     * @return {string|null}
      */
     async updateUserToken(userId) {
-        const userToken = crypto.randomBytes(32).toString('hex')
+        const userToken = randomHex()
 
         try {
             await this._db.update(this._userCollection, userId, {
@@ -169,30 +170,6 @@ class Authentication {
      */
     isAdmin(socket) {
         return !!socket.data.private.user.admin
-    }
-
-    /**
-     * @param {string} password
-     */
-    static async hash(password) {
-        return new Promise((resolve, reject) => {
-            const salt = crypto.randomBytes(8).toString('hex')
-
-            crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-                if (err) reject(err)
-                resolve(salt + ':' + derivedKey.toString('hex'))
-            })
-        })
-    }
-
-    static async verify(password, hash) {
-        return new Promise((resolve, reject) => {
-            const [salt, key] = hash.split(':')
-            crypto.scrypt(password, salt, 64, (err, derivedKey) => {
-                if (err) reject(err)
-                resolve(key === derivedKey.toString('hex'))
-            })
-        })
     }
 }
 

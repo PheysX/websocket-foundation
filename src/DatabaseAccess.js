@@ -1,4 +1,4 @@
-import {MongoClient, ServerApiVersion} from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 import SearchResult from './Data/SearchResult.js';
 
 class DatabaseAccess {

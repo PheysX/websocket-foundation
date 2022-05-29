@@ -1,6 +1,7 @@
 import Ajv from 'ajv'
 import definitions from 'ajv-keywords/dist/definitions/index.js'
 import addFormats from 'ajv-formats'
+import { hash } from './../Util/crypto.util.js'
 
 class SchemaFactory {
 
@@ -49,13 +50,23 @@ class SchemaFactory {
      * @param {string} action
      * @param {{}} data
      * @param {boolean} isAdmin
-     * @return {{}}
      */
-    reduce(entity, action, data, isAdmin) {
+    prepare(entity, action, data, isAdmin) {
         if (!this._ajv[entity]) {
-            return data
+            return
         }
 
+        this.reduce(entity, action, data, isAdmin)
+        this.transform(entity, action, data, isAdmin)
+    }
+
+    /**
+     * @param {string} entity
+     * @param {string} action
+     * @param {{}} data
+     * @param {boolean} isAdmin
+     */
+    reduce(entity, action, data, isAdmin) {
         const schema = this._ajv[entity][action].schema
         Object.values(schema.properties).forEach((value, index) => {
             if (!!value.readOnly) {
@@ -65,13 +76,27 @@ class SchemaFactory {
                 delete data[Object.keys(schema.properties)[index]]
             }
         })
-
-        return data
     }
 
     /**
      * @param {string} entity
      * @param {string} action
+     * @param {{}} data
+     * @param {boolean} isAdmin
+     */
+    transform(entity, action, data, isAdmin) {
+        const schema = this._ajv[entity][action].schema
+        Object.values(schema.properties).forEach((value, index) => {
+            if (value.format === 'password') {
+                data[Object.keys(schema.properties)[index]] = hash(data[Object.keys(schema.properties)[index]])
+            }
+        })
+    }
+
+    /**
+     * @param {string} entity
+     * @param {string} action
+     * @return {ValidateFunction|null}
      */
     get(entity, action) {
         if (!this._ajv[entity]) {
