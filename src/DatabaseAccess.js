@@ -86,6 +86,9 @@ class DatabaseAccess {
      * @returns {Promise<string>}
      */
     async create(collectionName, data) {
+        data.createdAt = new Date()
+        data.updatedAt = null
+
         let result = await this._db.collection(collectionName).insertOne(data);
 
         return result.insertedId.toString();
@@ -98,6 +101,8 @@ class DatabaseAccess {
      * @returns {Promise<void>}
      */
     async update(collectionName, id, data) {
+        data.updatedAt = new Date()
+
         await this._db.collection(collectionName).updateOne({
             _id: id,
         }, {
@@ -112,6 +117,9 @@ class DatabaseAccess {
      * @returns {Promise<void>}
      */
     async replace(collectionName, id, data) {
+        data.createdAt = new Date()
+        data.updatedAt = null
+
         await this._db.collection(collectionName).replaceOne({
             _id: id,
         }, {
