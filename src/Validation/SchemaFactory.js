@@ -87,8 +87,10 @@ class SchemaFactory {
     transform(entity, action, data, isAdmin) {
         const schema = this._ajv[entity][action].schema
         Object.values(schema.properties).forEach((value, index) => {
-            if (value.format === 'password') {
-                data[Object.keys(schema.properties)[index]] = hash(data[Object.keys(schema.properties)[index]])
+            let propertyIdentifier = Object.keys(schema.properties)[index]
+
+            if (value.format === 'password' && typeof data[propertyIdentifier] === 'string') {
+                data[propertyIdentifier] = hash(data[propertyIdentifier])
             }
         })
     }

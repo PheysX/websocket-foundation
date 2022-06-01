@@ -1,7 +1,7 @@
 {
     "name": "websocket-foundation",
     "type": "module",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "Socket.io & mongoDB based websocket server foundation",
     "license": "MIT",
     "author": {
