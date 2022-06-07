@@ -35,6 +35,14 @@ class SearchResult {
 
         return this._items[0]
     }
+
+    get last() {
+        if (this._total === 0) {
+            return null
+        }
+
+        return this._items[this._total - 1]
+    }
 }
 
 export default SearchResult

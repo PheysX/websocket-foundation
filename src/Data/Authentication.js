@@ -50,6 +50,10 @@ class Authentication {
             key: 'userToken',
             value: userToken,
         })
+        criteria.addFilter({
+            key: 'active',
+            value: true,
+        })
 
         try {
             const usersResult = await this._db.search(this._userCollection, criteria)
@@ -74,6 +78,10 @@ class Authentication {
         criteria.addFilter({
             key: 'username',
             value: username,
+        })
+        criteria.addFilter({
+            key: 'active',
+            value: true,
         })
 
         try {
