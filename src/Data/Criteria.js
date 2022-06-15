@@ -1,34 +1,40 @@
-class Criteria {
+export default class Criteria {
 
     /**
-     * @type {string[]}
+     * @param {string[]}
      * @private
      */
     _ids = []
 
     /**
-     * @type {object}
+     * @param {object}
      * @private
      */
     _sort = {}
 
     /**
-     * @type {number}
+     * @param {number}
      * @private
      */
     _limit = 50
 
     /**
-     * @type {number}
+     * @param {number}
      * @private
      */
     _offset = 0
 
     /**
-     * @type {object[]}
+     * @param {object[]}
      * @private
      */
     _filter = []
+
+    /**
+     * @param {string[]}
+     * @private
+     */
+    _associations = {}
 
     /**
      * @param {string[]} ids
@@ -37,10 +43,10 @@ class Criteria {
      * @param {number} offset
      */
     constructor(ids = [], sort = {}, limit = 50, offset = 0) {
-        this._ids = ids
-        this._sort = sort
-        this._limit = limit
-        this._offset = offset
+        this._ids = ids ?? []
+        this._sort = sort ?? {}
+        this._limit = limit ?? 50
+        this._offset = offset ?? 0
     }
 
     get ids() {
@@ -87,7 +93,7 @@ class Criteria {
     }
 
     set filter(value) {
-        this._filter = value
+        this._filter = value ?? []
     }
 
     addFilter(value) {
@@ -97,6 +103,16 @@ class Criteria {
     resetFilter() {
         this._filter = []
     }
-}
 
-export default Criteria
+    get associations() {
+        return this._associations
+    }
+
+    set associations(value) {
+        this._associations = value ?? {}
+    }
+
+    resetAssociations() {
+        this._associations = {}
+    }
+}

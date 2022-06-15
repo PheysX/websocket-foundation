@@ -5,19 +5,20 @@ import Authentication from './Data/Authentication.js'
 import {instrument} from '@socket.io/admin-ui'
 import {createServer} from 'http'
 import merge from 'lodash/merge.js'
+import AssociationResolver from './Validation/Association/AssociationResolver.js'
 
 const httpServer = createServer()
 
 class SocketAccess extends Authentication {
 
     /**
-     * @type {string[]}
+     * @param {string[]}
      * @private
      */
     _entities = []
 
     /**
-     * @private
+     * @param {{}}
      */
     _operations = {
         read: {
@@ -55,6 +56,7 @@ class SocketAccess extends Authentication {
         this._socketParams = socketParams
         this._socketPort = socketPort
         this._debugMode = debugMode
+        this._associationResolver = new AssociationResolver(this._db, this._schemaFactory)
 
         merge(this._operations, operations)
 
@@ -158,8 +160,11 @@ class SocketAccess extends Authentication {
         try {
             const criteria = new Criteria(data.ids, data.sort, data.limit, data.offset)
             criteria.filter = data.filter
+            criteria.associations = data.associations
 
             const result = await this._db.search(entity, criteria)
+            await this._associationResolver.resolve(socket, entity, result, criteria, this.isAdmin(socket))
+
             this.push(socket, `${entity}:found`, result.items)
         } catch (err) {
             this.push(socket, `${entity}:search:error`, err)
@@ -271,7 +276,7 @@ class SocketAccess extends Authentication {
      * @param {{}} data
      */
     async validate(entity, action, data, isAdmin) {
-        const validator = this._schemaFactory.get(entity, action)
+        const validator = this._schemaFactory.getValidator(entity, action)
         this._schemaFactory.prepare(entity, action, data, isAdmin)
 
         validator(data)

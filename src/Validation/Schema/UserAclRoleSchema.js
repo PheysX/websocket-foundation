@@ -2,6 +2,8 @@ import Schema from './Schema.js'
 
 export default class UserAclRoleSchema extends Schema {
 
+    static entity = 'userAclRole'
+
     schema = {
         type: 'object',
         required: [

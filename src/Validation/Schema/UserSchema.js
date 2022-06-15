@@ -1,6 +1,13 @@
 import Schema from './Schema.js'
+import ManyToManyAssociation from './../Association/ManyToManyAssociation.js'
+import UserAclRoleSchema from './../Schema/UserAclRoleSchema.js'
+import AclRoleSchema from './../Schema/AclRoleSchema.js'
+import ManyToOneAssociation from './../Association/ManyToOneAssociation.js'
+import SalutationSchema from './../Schema/SalutationSchema.js'
 
 export default class UserSchema extends Schema {
+
+    static entity = 'user'
 
     schema = {
         type: 'object',
@@ -8,6 +15,7 @@ export default class UserSchema extends Schema {
             '_id',
             'username',
             'password',
+            'salutationId',
             'firstName',
             'lastName',
             'email',
@@ -22,11 +30,18 @@ export default class UserSchema extends Schema {
             username: {
                 type: 'string',
                 allOf: this.allOf(['trim'], 1),
+                validate: [
+                    'alreadyExists',
+                ],
             },
             password: {
                 type: 'string',
                 format: 'password',
                 allOf: this.allOf([], 145, 145),
+            },
+            salutationId: {
+                type: 'string',
+                format: 'uuid',
             },
             firstName: {
                 type: 'string',
@@ -39,6 +54,9 @@ export default class UserSchema extends Schema {
             email: {
                 type: 'string',
                 format: 'email',
+                validate: [
+                    'alreadyExists',
+                ],
             },
             active: {
                 type: 'boolean',
@@ -64,6 +82,13 @@ export default class UserSchema extends Schema {
             },
         },
         additionalProperties: false,
+    }
+
+    associations() {
+        return [
+            new ManyToOneAssociation('salutation', 'salutationId', SalutationSchema, '_id', true),
+            new ManyToManyAssociation('aclRoles', '_id', UserAclRoleSchema, 'userId', 'aclRoleId', AclRoleSchema),
+        ]
     }
 
     create() {

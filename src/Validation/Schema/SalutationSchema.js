@@ -1,39 +1,46 @@
 import Schema from './Schema.js'
-import ManyToManyAssociation from './../Association/ManyToManyAssociation.js'
-import UserAclRoleSchema from './../Schema/UserAclRoleSchema.js'
+import OneToManyAssociation from './../Association/OneToManyAssociation.js'
 import UserSchema from './../Schema/UserSchema.js'
 
-export default class AclRoleSchema extends Schema {
+export default class SalutationSchema extends Schema {
 
-    static entity = 'aclRole'
+    static entity = 'salutation'
 
     schema = {
         type: 'object',
         required: [
             '_id',
-            'name',
-            'permissions',
+            'salutationKey',
+            'displayName',
+            'letterName',
         ],
         properties: {
             _id: {
                 type: 'string',
                 format: 'uuid',
             },
-            name: {
+            salutationKey: {
+                type: 'string',
+                allOf: this.allOf(['trim'], 1),
+                validate: [
+                    'alreadyExists',
+                ],
+            },
+            displayName: {
                 type: 'string',
                 allOf: this.allOf(['trim'], 1),
             },
-            permissions: {
-                type: 'array',
+            letterName: {
+                type: 'string',
+                allOf: this.allOf(['trim'], 1),
             },
-
         },
         additionalProperties: false,
     }
 
     associations() {
         return [
-            new ManyToManyAssociation('users', '_id', UserAclRoleSchema, 'aclRoleId', 'userId', UserSchema),
+            new OneToManyAssociation('users', '_id', 'salutationId', UserSchema),
         ]
     }
 

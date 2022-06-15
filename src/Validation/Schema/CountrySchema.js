@@ -1,40 +1,42 @@
 import Schema from './Schema.js'
-import ManyToManyAssociation from './../Association/ManyToManyAssociation.js'
-import UserAclRoleSchema from './../Schema/UserAclRoleSchema.js'
-import UserSchema from './../Schema/UserSchema.js'
 
-export default class AclRoleSchema extends Schema {
+export default class CountrySchema extends Schema {
 
-    static entity = 'aclRole'
+    static entity = 'country'
 
     schema = {
         type: 'object',
         required: [
             '_id',
+            'iso2',
+            'iso3',
             'name',
-            'permissions',
         ],
         properties: {
             _id: {
                 type: 'string',
                 format: 'uuid',
             },
+            iso2: {
+                type: 'string',
+                allOf: this.allOf(['trim', 'toUpperCase'], 2, 2),
+                validate: [
+                    'alreadyExists',
+                ],
+            },
+            iso3: {
+                type: 'string',
+                allOf: this.allOf(['trim', 'toUpperCase'], 3, 3),
+                validate: [
+                    'alreadyExists',
+                ],
+            },
             name: {
                 type: 'string',
                 allOf: this.allOf(['trim'], 1),
             },
-            permissions: {
-                type: 'array',
-            },
-
         },
         additionalProperties: false,
-    }
-
-    associations() {
-        return [
-            new ManyToManyAssociation('users', '_id', UserAclRoleSchema, 'aclRoleId', 'userId', UserSchema),
-        ]
     }
 
     create() {

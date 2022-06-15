@@ -89,7 +89,8 @@ multiple [mongoDB](https://www.mongodb.com/docs/manual/reference/method/db.colle
             "key": "active",
             "value": true
         }
-    ]
+    ],
+    "associations": {}
 }
 ```
 

@@ -3,10 +3,10 @@ import definitions from 'ajv-keywords/dist/definitions/index.js'
 import addFormats from 'ajv-formats'
 import { hash } from './../Util/crypto.util.js'
 
-class SchemaFactory {
+export default class SchemaFactory {
 
     /**
-     * @type {{}}
+     * @param {{}}
      * @private
      */
     _ajv = {}
@@ -29,6 +29,9 @@ class SchemaFactory {
             const schema = new entities[entity]
 
             this._ajv[entity] = {
+                search: {
+                    associations: schema.associations(),
+                },
                 create: {
                     schema: schema.create(),
                     compile: ajv.compile(schema.create()),
@@ -100,12 +103,25 @@ class SchemaFactory {
      * @param {string} action
      * @return {ValidateFunction|null}
      */
-    get(entity, action) {
+    getValidator(entity, action) {
         if (!this._ajv[entity]) {
             return null
         }
 
         return this._ajv[entity][action].compile
+    }
+
+    /**
+     * @param {string} entity
+     * @param {string} action
+     * @return {ValidateFunction|null}
+     */
+    getAssociations(entity) {
+        if (!this._ajv[entity]) {
+            return null
+        }
+
+        return this._ajv[entity].search.associations
     }
 
     _addFormats(ajv) {
@@ -115,8 +131,7 @@ class SchemaFactory {
     _addKeywords(ajv) {
         ajv.addVocabulary([
             'adminOnly',
+            'validate',
         ])
     }
 }
-
-export default SchemaFactory

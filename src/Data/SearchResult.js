@@ -1,13 +1,13 @@
-class SearchResult {
+export default class SearchResult {
 
     /**
-     * @type {object[]}
+     * @param {object[]}
      * @private
      */
     _items = []
 
     /**
-     * @type {number}
+     * @param {number}
      * @private
      */
     _total = 0
@@ -44,5 +44,3 @@ class SearchResult {
         return this._items[this._total - 1]
     }
 }
-
-export default SearchResult

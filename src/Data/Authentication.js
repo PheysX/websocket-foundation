@@ -2,10 +2,10 @@ import Criteria from './Criteria.js'
 import log from 'npmlog'
 import { verify, randomHex } from './../Util/crypto.util.js'
 
-class Authentication {
+export default class Authentication {
 
     /**
-     * @type {string[]}
+     * @param {string[]}
      */
     actions = [
         'read',
@@ -180,5 +180,3 @@ class Authentication {
         return !!socket.data.private.user.admin
     }
 }
-
-export default Authentication

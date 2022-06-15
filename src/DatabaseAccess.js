@@ -1,10 +1,10 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
-import SearchResult from './Data/SearchResult.js';
+import { MongoClient, ServerApiVersion } from 'mongodb'
+import SearchResult from './Data/SearchResult.js'
 
 class DatabaseAccess {
 
     /**
-     * @type {string}
+     * @param {string}
      * @private
      */
     _databaseName = null

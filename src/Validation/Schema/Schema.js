@@ -1,5 +1,7 @@
 export default class Schema {
 
+    static entity = null
+
     /**
      * @param {string[]} transform
      * @param {number|null} minLength
@@ -32,5 +34,12 @@ export default class Schema {
      */
     clone(object) {
         return JSON.parse(JSON.stringify(object))
+    }
+
+    /**
+     * @return {[]}
+     */
+    associations() {
+        return []
     }
 }
