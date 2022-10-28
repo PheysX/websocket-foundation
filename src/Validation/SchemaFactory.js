@@ -15,11 +15,12 @@ export default class SchemaFactory {
      *
      * @param {{}} entities
      */
-    constructor(entities) {
+    constructor(entities, args = {}) {
         const ajv = new Ajv({
             allErrors: true,
             useDefaults: true,
             keywords: definitions(),
+            ...args
         })
 
         this._addFormats(ajv)
