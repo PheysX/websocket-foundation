@@ -235,8 +235,8 @@ class SocketAccess extends Authentication {
      * @returns {Promise<void>}
      */
     async deleteEntity(socket, entity, SocketAccess, data) {
-        const ids = data
         try {
+            const ids = data.ids
             const criteria = new Criteria(ids)
             const deletedCount = await this._db.delete(entity, criteria.ids)
 
