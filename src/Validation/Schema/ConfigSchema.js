@@ -24,8 +24,7 @@ export default class ConfigSchema extends Schema {
                 ],
             },
             configValue: {
-                type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                type: ['string', 'number', 'integer', 'boolean', 'array', 'object'],
             },
         },
         additionalProperties: false,
