@@ -1,4 +1,4 @@
-import Schema from './Schema.js'
+import Schema, { allOf, clone } from './Schema.js'
 
 export default class ConfigSchema extends Schema {
 
@@ -18,7 +18,7 @@ export default class ConfigSchema extends Schema {
             },
             configKey: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
                 validate: [
                     'alreadyExists',
                 ],
@@ -35,7 +35,7 @@ export default class ConfigSchema extends Schema {
     }
 
     update() {
-        const schema = this.clone(this.schema)
+        const schema = clone(this.schema)
 
         schema.required = [
             '_id',

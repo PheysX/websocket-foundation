@@ -1,4 +1,4 @@
-import Schema from './Schema.js'
+import Schema, { allOf, clone } from './Schema.js'
 import ManyToManyAssociation from './../Association/ManyToManyAssociation.js'
 import UserAclRoleSchema from './../Schema/UserAclRoleSchema.js'
 import AclRoleSchema from './../Schema/AclRoleSchema.js'
@@ -29,7 +29,7 @@ export default class UserSchema extends Schema {
             },
             username: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
                 validate: [
                     'alreadyExists',
                 ],
@@ -37,7 +37,7 @@ export default class UserSchema extends Schema {
             password: {
                 type: 'string',
                 format: 'password',
-                allOf: this.allOf([], 145, 145),
+                allOf: allOf([], 145, 145),
             },
             salutationId: {
                 type: 'string',
@@ -45,11 +45,11 @@ export default class UserSchema extends Schema {
             },
             firstName: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
             },
             lastName: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
             },
             email: {
                 type: 'string',
@@ -78,7 +78,7 @@ export default class UserSchema extends Schema {
                         type: 'null'
                     }
                 ],
-                allOf: this.allOf(['trim'], 64, 64),
+                allOf: allOf(['trim'], 64, 64),
             },
         },
         additionalProperties: false,
@@ -96,7 +96,7 @@ export default class UserSchema extends Schema {
     }
 
     update() {
-        const schema = this.clone(this.schema)
+        const schema = clone(this.schema)
 
         schema.required = [
             '_id',

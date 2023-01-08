@@ -1,4 +1,4 @@
-import Schema from './Schema.js'
+import Schema, { allOf, clone } from './Schema.js'
 import OneToManyAssociation from './../Association/OneToManyAssociation.js'
 import UserSchema from './../Schema/UserSchema.js'
 
@@ -21,18 +21,18 @@ export default class SalutationSchema extends Schema {
             },
             salutationKey: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
                 validate: [
                     'alreadyExists',
                 ],
             },
             displayName: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
             },
             letterName: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
             },
         },
         additionalProperties: false,
@@ -49,7 +49,7 @@ export default class SalutationSchema extends Schema {
     }
 
     update() {
-        const schema = this.clone(this.schema)
+        const schema = clone(this.schema)
 
         schema.required = [
             '_id',

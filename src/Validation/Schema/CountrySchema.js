@@ -1,4 +1,4 @@
-import Schema from './Schema.js'
+import Schema, { allOf, clone } from './Schema.js'
 
 export default class CountrySchema extends Schema {
 
@@ -19,21 +19,21 @@ export default class CountrySchema extends Schema {
             },
             iso2: {
                 type: 'string',
-                allOf: this.allOf(['trim', 'toUpperCase'], 2, 2),
+                allOf: allOf(['trim', 'toUpperCase'], 2, 2),
                 validate: [
                     'alreadyExists',
                 ],
             },
             iso3: {
                 type: 'string',
-                allOf: this.allOf(['trim', 'toUpperCase'], 3, 3),
+                allOf: allOf(['trim', 'toUpperCase'], 3, 3),
                 validate: [
                     'alreadyExists',
                 ],
             },
             name: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
             },
         },
         additionalProperties: false,
@@ -44,7 +44,7 @@ export default class CountrySchema extends Schema {
     }
 
     update() {
-        const schema = this.clone(this.schema)
+        const schema = clone(this.schema)
 
         schema.required = [
             '_id',

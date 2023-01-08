@@ -1,4 +1,4 @@
-import Schema from './Schema.js'
+import Schema, { allOf, clone } from './Schema.js'
 import ManyToManyAssociation from './../Association/ManyToManyAssociation.js'
 import UserAclRoleSchema from './../Schema/UserAclRoleSchema.js'
 import UserSchema from './../Schema/UserSchema.js'
@@ -21,7 +21,7 @@ export default class AclRoleSchema extends Schema {
             },
             name: {
                 type: 'string',
-                allOf: this.allOf(['trim'], 1),
+                allOf: allOf(['trim'], 1),
             },
             permissions: {
                 type: 'array',
@@ -42,7 +42,7 @@ export default class AclRoleSchema extends Schema {
     }
 
     update() {
-        const schema = this.clone(this.schema)
+        const schema = clone(this.schema)
 
         schema.required = [
             '_id',
