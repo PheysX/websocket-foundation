@@ -1,5 +1,6 @@
 import { MongoClient, ServerApiVersion } from 'mongodb'
 import SearchResult from './Data/SearchResult.js'
+import { createUtcDate } from './Util/date.util.js';
 
 class DatabaseAccess {
 
@@ -86,7 +87,7 @@ class DatabaseAccess {
      * @returns {Promise<string>}
      */
     async create(collectionName, data) {
-        data.createdAt = new Date()
+        data.createdAt = createUtcDate()
         data.updatedAt = null
 
         let result = await this._db.collection(collectionName).insertOne(data);
@@ -101,7 +102,7 @@ class DatabaseAccess {
      * @returns {Promise<void>}
      */
     async update(collectionName, id, data) {
-        data.updatedAt = new Date()
+        data.updatedAt = createUtcDate()
 
         await this._db.collection(collectionName).updateOne({
             _id: id,
@@ -117,7 +118,7 @@ class DatabaseAccess {
      * @returns {Promise<void>}
      */
     async replace(collectionName, id, data) {
-        data.createdAt = new Date()
+        data.createdAt = createUtcDate()
         data.updatedAt = null
 
         await this._db.collection(collectionName).replaceOne({
